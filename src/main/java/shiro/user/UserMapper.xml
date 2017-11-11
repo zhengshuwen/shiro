@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--interface mapper-->
+<mapper namespace="shiro.user.UserMapper">
+<!--map is a id / model is a entity(has geter/seter)-->
+	<resultMap id="map" type="shiro.user.UserBean">
+		<result column="userId" property="userid" />
+		<result column="userName" property="username" />
+		<result column="password" property="password" />
+		<result column="createTime" property="createtime" />
+		<result column="updateTime" property="updatetime" />
+	</resultMap>
+
+	<sql id="Base_Column_List" >
+		userId,userName,password,createTime,updateTime
+	</sql>
+	<select id="findRoles" parameterType="String" resultType="java.lang.String">
+		SELECT rolename from role left join userRole using(roleid) where userRole.userid=#{userid}
+	</select>
+	<select id="findPermissions" parameterType="String" resultType="java.lang.String">
+		select permissionname from permission left join rolePermission using(permissionid) left join userRole using(roleid) where userRole.userid=#{userid}
+	</select>
+	<select id="findByName" parameterType="String" resultMap="map">
+		select * from ssmuser where username=#{userName}
+	</select>
+	
+	<select id="findById" parameterType="String" resultMap="map">
+		select * from ssmuser where userid=#{userid}
+	</select>
+	
+	<select id="select"  parameterType="shiro.user.UserBean" resultMap="map">
+		select
+		  <include refid="Base_Column_List" />
+		from ssmuser
+		<trim prefix="WHERE" prefixOverrides="AND |OR">
+			<if test="userid != null and userid!=''">
+ 				AND userId=#{userid}
+			</if>
+			<if test="username != null and username!=''">
+ 				AND userName=#{username}
+			</if>
+			<if test="password != null and password!=''">
+ 				AND password=#{password}
+			</if>
+			<if test="createtime != null and createtime!=''">
+ 				AND createTime=#{createtime}
+			</if>
+			<if test="updatetime != null and updatetime!=''">
+ 				AND updateTime=#{updatetime}
+			</if>
+		</trim>
+	</select>
+	<update id="update" parameterType="shiro.user.UserBean">
+		update ssmuser 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="userid!= null and userid!=''">
+ 				 userId=#{userid}, 
+			</if>
+			<if test="username!= null and username!=''">
+ 				 userName=#{username}, 
+			</if>
+			<if test="password!= null and password!=''">
+ 				 password=#{password}, 
+			</if>
+			<if test="createtime!= null and createtime!=''">
+ 				 createTime=#{createtime}, 
+			</if>
+			<if test="updatetime!= null and updatetime!=''">
+ 				 updateTime=#{updatetime}, 
+			</if>
+		</trim>
+		<trim prefix="WHERE" prefixOverrides="AND |OR">
+			<if test="userid != null and userid!=''">
+ 				AND userId=#{userid}
+			</if>
+			<if test="username != null and username!=''">
+ 				AND userName=#{username}
+			</if>
+			<if test="password != null and password!=''">
+ 				AND password=#{password}
+			</if>
+			<if test="createtime != null and createtime!=''">
+ 				AND createTime=#{createtime}
+			</if>
+			<if test="updatetime != null and updatetime!=''">
+ 				AND updateTime=#{updatetime}
+			</if>
+		</trim>
+	</update>
+	<insert id="insert" parameterType="shiro.user.UserBean">
+		insert into ssmuser
+		<trim prefix="(" suffix=")" prefixOverrides="AND |OR" suffixOverrides=",">
+			<if test="userid != null and userid!=''">
+				userId,
+			</if>
+			<if test="username != null and username!=''">
+				userName,
+			</if>
+			<if test="password != null and password!=''">
+				password,
+			</if>
+			<if test="createtime != null and createtime!=''">
+				createTime,
+			</if>
+			<if test="updatetime != null and updatetime!=''">
+				updateTime,
+			</if>
+		</trim>
+		values
+		<trim prefix="(" suffix=")" prefixOverrides="AND |OR" suffixOverrides=",">
+			<if test="userid != null and userid!=''">
+				#{userid},
+			</if>
+			<if test="username != null and username!=''">
+				#{username},
+			</if>
+			<if test="password != null and password!=''">
+				#{password},
+			</if>
+			<if test="createtime != null and createtime!=''">
+				#{createtime},
+			</if>
+			<if test="updatetime != null and updatetime!=''">
+				#{updatetime},
+			</if>
+		</trim>
+	</insert>
+	<delete  id="delete" parameterType="shiro.user.UserBean">
+		delete from ssmuser
+		<trim prefix="WHERE" prefixOverrides="AND |OR">
+			<if test="userid != null and userid!=''">
+ 				AND userId=#{userid}
+			</if>
+			<if test="username != null and username!=''">
+ 				AND userName=#{username}
+			</if>
+			<if test="password != null and password!=''">
+ 				AND password=#{password}
+			</if>
+			<if test="createtime != null and createtime!=''">
+ 				AND createTime=#{createtime}
+			</if>
+			<if test="updatetime != null and updatetime!=''">
+ 				AND updateTime=#{updatetime}
+			</if>
+		</trim>
+	</delete>
+
+</mapper>

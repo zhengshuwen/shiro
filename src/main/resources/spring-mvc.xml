@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">                 
+    
+    <mvc:default-servlet-handler />
+	<!--启用自动扫描  -->
+	<context:component-scan base-package="shiro;sys" >
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+    <!-- 默认的注解映射的支持 -->
+    <mvc:annotation-driven />
+    
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
+        <!-- 前缀 -->
+        <property name="prefix" value="/" />
+        <!-- <property name="suffix" value=".jsp"></property> -->
+    </bean>
+    
+    <!-- 开启shiro注释 for example, @RequiresRoles, @RequiresPermissions  -->
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor"/>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+    	<property name="securityManager" ref="securityManager"/>
+	</bean>
+	
+	<!-- 自定义异常处理1、处理没有访问权限的异常-->  
+    <bean id="exceptionResolver" class="sys.exception.MyExceptionResolver"></bean>
+</beans>

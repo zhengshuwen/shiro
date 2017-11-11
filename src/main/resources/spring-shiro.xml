@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:util="http://www.springframework.org/schema/util"   
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd  
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+    
+    <!-- 基于Form表单的身份验证过滤器 -->
+    <bean id="formAuthenticationFilter" class="sys.shiro.FormLoginFilter">
+    </bean>
+    
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/index.html"/>
+    	<property name="successUrl" value="/myweb.html"/>
+        <property name="filters">
+            <util:map>
+            	<!-- 将自定义 的FormAuthenticationFilter注入shiroFilter中 -->
+                <entry key="authc" value-ref="formAuthenticationFilter"/>
+            </util:map>
+        </property>
+        <property name="filterChainDefinitions">
+            <value>
+            	<!-- 对静态资源设置匿名访问 -->  
+                /images/** = anon  
+                /js/** = anon
+                <!-- /** = authc 所有url都必须认证通过才可以访问 -->  
+                /** = authc  
+            </value>
+        </property>
+	</bean>
+
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+	   <property name="realm" ref="myRealm"/>
+	   <!-- 注入缓存管理器 --> 
+	   <property name="cacheManager" ref="cacheManager" /> 
+	</bean>
+	
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+	<!-- 自定义realm --> 
+	<bean id="myRealm" class="sys.shiro.MyRealm">
+		<!-- 认证比较器 -->
+	   <property name="credentialsMatcher">
+            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+                <property name="hashAlgorithmName" value="MD5"></property> <!-- 加密算法的名称 -->
+                <property name="hashIterations" value="1024"></property> <!-- 配置加密的次数 -->
+            </bean>
+        </property>
+	</bean>
+	
+	 <!-- 缓存管理器 -->  
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">  
+        <property name="cacheManagerConfigFile" value="classpath:shiro-ehcache.xml" />  
+    </bean>  
+    
+</beans>
