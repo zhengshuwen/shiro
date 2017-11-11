@@ -59,6 +59,9 @@ public class MyRealm extends AuthorizingRealm{
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
 		log.info("进入认证的方法：doGetAuthenticationInfo");
+		/**
+		 * 
+		 * */
         String username = (String)token.getPrincipal();
         UserBean user = userServiceImpl.findByName(username);
         if(user == null) {
