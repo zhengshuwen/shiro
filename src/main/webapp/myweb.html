@@ -3,9 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <title>change user message</title>
+<script src="/shiro/js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+	function userpost(){
+		$.ajax({
+			type:'post',
+			url:'userpost/'+$("input[name='username']").val(),
+			data:$('#userpost').serialize()
+		});
+	}
+	
+</script>
 </head>
 <body>
-	<form action="userPost" method="post">
+	<form id="userpost" action="userpost" method="post">
+		<input type="hidden" name="_method" value="post"><!-- restful -->
 		<table>
 			<tr>
 				<td>用户名:</td>
@@ -16,7 +28,39 @@
 				<td><input type="password" name="password"></td>
 			</tr>
 			<tr>
-				<td><input type="submit" title="修改" value="修改"></td>
+				<td><input type="button" onclick="userpost();" title="修改" value="修改"></td>
+				<td><input type="reset" title="取消" value="取消"></td>
+			</tr>
+		</table>
+	</form>
+	
+	<form action="userput" method="post">
+	<input type="hidden" name="_method" value="put"><!-- restful -->
+		<table>
+			<tr>
+				<td>用户名:</td>
+				<td><input type="text" name="username"></td>
+			</tr>
+			<tr>
+				<td>密码:</td>
+				<td><input type="password" name="password"></td>
+			</tr>
+			<tr>
+				<td><input type="submit" title="新增" value="新增"></td>
+				<td><input type="reset" title="取消" value="取消"></td>
+			</tr>
+		</table>
+	</form>
+	
+	<form action="userdelete" method="post">
+	<input type="hidden" name="_method" value="delete"><!-- restful -->
+		<table>
+			<tr>
+				<td>用户名:</td>
+				<td><input type="text" name="username"></td>
+			</tr>
+			<tr>
+				<td><input type="submit" title="删除" value="删除"></td>
 				<td><input type="reset" title="取消" value="取消"></td>
 			</tr>
 		</table>

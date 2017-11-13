@@ -23,11 +23,9 @@ public class MyRealm extends AuthorizingRealm{
 	@Autowired
 	UserService userServiceImpl;
 	private Logger log = Logger.getLogger(MyRealm.class);
-	@Override
-	protected AuthorizationInfo getAuthorizationInfo(PrincipalCollection principals) {
-		return null;
-	}
-
+	
+	
+	
 	/**
 	 * 授权
 	 * @param PrincipalCollection principals
@@ -39,7 +37,6 @@ public class MyRealm extends AuthorizingRealm{
 	 * */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-		
 		String userid = (String)principals.getPrimaryPrincipal();
 		SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
 		authorizationInfo.setRoles(userServiceImpl.findRoles(userid));

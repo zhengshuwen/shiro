@@ -62,7 +62,7 @@ public class FormLoginFilter extends PathMatchingFilter {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
         log.info("用户:"+username+"，密码："+password);
-        String currentUserid=SecurityUtils.getSubject().getPrincipal().toString();
+        String currentUserid=(String) SecurityUtils.getSubject().getPrincipal();
     	UserBean user = userServiceImpl.findById(currentUserid);
     	/**判断是否已经登录*/
     	if (SecurityUtils.getSubject().isAuthenticated()&&user.getUsername()==username) {
