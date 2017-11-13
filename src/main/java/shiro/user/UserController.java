@@ -49,7 +49,7 @@ public class UserController{
 	@RequestMapping("/userPost")
 	public void userPost(UserBean userBean,ModelMap model,HttpServletResponse response, HttpServletRequest request) throws Exception{
 		System.out.println("权限测试！/userPost");
-		//userServiceImpl.update(userBean);
+		userServiceImpl.update(userBean);
 	}
 
 	/**

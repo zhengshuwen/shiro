@@ -23,6 +23,11 @@ public class MyRealm extends AuthorizingRealm{
 	@Autowired
 	UserService userServiceImpl;
 	private Logger log = Logger.getLogger(MyRealm.class);
+	@Override
+	protected AuthorizationInfo getAuthorizationInfo(PrincipalCollection principals) {
+		return null;
+	}
+
 	/**
 	 * 授权
 	 * @param PrincipalCollection principals
@@ -32,7 +37,6 @@ public class MyRealm extends AuthorizingRealm{
 		2、@RequiresRoles("admin") ：在方法上加注解的时候；
 		3、[@shiro.hasPermission name = "admin"][/@shiro.hasPermission]：在页面上加shiro标签的时候，即进这个页面的时候扫描到有这个标签的时候。
 	 * */
-	
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		
@@ -59,9 +63,6 @@ public class MyRealm extends AuthorizingRealm{
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
 		log.info("进入认证的方法：doGetAuthenticationInfo");
-		/**
-		 * 
-		 * */
         String username = (String)token.getPrincipal();
         UserBean user = userServiceImpl.findByName(username);
         if(user == null) {

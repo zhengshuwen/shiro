@@ -13,12 +13,13 @@
         <property name="securityManager" ref="securityManager"/>
         <property name="loginUrl" value="/index.html"/>
     	<property name="successUrl" value="/myweb.html"/>
+    	<!-- 认证过滤器 （登录认证，和身份认证）-->
         <property name="filters">
-            <util:map>
-            	<!-- 将自定义 的FormAuthenticationFilter注入shiroFilter中 -->
-                <entry key="authc" value-ref="formAuthenticationFilter"/>
-            </util:map>
+        
+        	<!-- 将自定义 的FormAuthenticationFilter注入shiroFilter中 -->
+            <util:map><entry key="authc" value-ref="formAuthenticationFilter"/></util:map>
         </property>
+        <!-- 授权过滤器（所有的请求都需要授权） -->
         <property name="filterChainDefinitions">
             <value>
             	<!-- 对静态资源设置匿名访问 -->  
@@ -39,8 +40,16 @@
 	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
 	<!-- 自定义realm --> 
 	<bean id="myRealm" class="sys.shiro.MyRealm">
+		<!-- 开缓存 -->
+        <property name="cachingEnabled" value="true" />
+        <!-- 认证缓存 -->
+        <property name="authenticationCachingEnabled" value="true" />
+        <property name="authenticationCacheName" value="authenticationCache" />
+        <!-- 授权缓存 -->
+        <property name="authorizationCachingEnabled" value="true" />
+        <property name="authorizationCacheName" value="authorizationCache" />
 		<!-- 认证比较器 -->
-	   <property name="credentialsMatcher">
+	   	<property name="credentialsMatcher">
             <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
                 <property name="hashAlgorithmName" value="MD5"></property> <!-- 加密算法的名称 -->
                 <property name="hashIterations" value="1024"></property> <!-- 配置加密的次数 -->
