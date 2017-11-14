@@ -1,5 +1,6 @@
 package shiro.user;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,7 +21,7 @@ import java.util.List;
 @Controller
 public class UserController{
 	@Autowired
-	UserServiceImpl userServiceImpl;
+	UserService userServiceImpl;
 
 	/**
 	*查询：用户表（ssmuser）信息

@@ -4,12 +4,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import shiro.user.UserBean;
 import shiro.user.UserMapper;
 import shiro.user.UserService;
+import sys.shiro.EncryptionMD5;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -30,7 +32,8 @@ public class UserServiceImpl implements UserService {
 		userMapper.delete(userBean);
 	}
 	public int update(UserBean userBean) {
-		// TODO Auto-generated method stub
+		userBean.setUserid((String)SecurityUtils.getSubject().getPrincipal());
+		userBean.setPassword(EncryptionMD5.toMD5(userBean.getPassword()));
 		return userMapper.update(userBean);
 	}
 	public int insert(UserBean userBean) {

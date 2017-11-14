@@ -2,12 +2,13 @@ package sys.shiro;
 
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.util.ByteSource;
+import org.junit.Test;
 
 public class EncryptionMD5 {
 	/**加密名称*/
-	String hashAlgorithmName = "MD5";
+	private static String hashAlgorithmName = "MD5";
     /**加密次数*/
-    int hashIterations = 1024;
+    private static int hashIterations = 1024;
     /**加密的盐*/
     //String salt = null;
     /**
@@ -15,7 +16,7 @@ public class EncryptionMD5 {
      * @param String credentials需要加密的凭证(密码)
      * @return String 加密后的字符串
      * */
-    public String toMD5(String credentials){
+    public static String toMD5(String credentials){
     	SimpleHash str = new SimpleHash(hashAlgorithmName, credentials, null, hashIterations);
 		return str.toString();
     }
@@ -29,5 +30,10 @@ public class EncryptionMD5 {
     public String toMD5(String credentials,String salt){
     	SimpleHash str = new SimpleHash(hashAlgorithmName, credentials, ByteSource.Util.bytes(salt), hashIterations);
 		return str.toString();
+    }
+    
+    @Test
+    public void test(){
+    	System.out.println(toMD5("shiro"));
     }
 }

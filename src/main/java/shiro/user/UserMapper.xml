@@ -53,9 +53,7 @@
 	<update id="update" parameterType="shiro.user.UserBean">
 		update ssmuser 
 		<trim prefix="set" suffixOverrides=",">
-			<if test="userid!= null and userid!=''">
- 				 userId=#{userid}, 
-			</if>
+
 			<if test="username!= null and username!=''">
  				 userName=#{username}, 
 			</if>
@@ -70,8 +68,8 @@
 			</if>
 		</trim>
 		<trim prefix="WHERE" prefixOverrides="AND |OR">
-			<if test="username != null and username!=''">
- 				AND userName=#{username}
+			<if test="userid != null and userid!=''">
+ 				AND userid=#{userid}
 			</if>
 		</trim>
 	</update>
