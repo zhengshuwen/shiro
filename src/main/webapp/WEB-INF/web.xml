@@ -107,12 +107,7 @@
 		<servlet-name>springMVC</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping> 
-	
-	<session-config>
-		<!-- 分钟 -->
-		<session-timeout>10</session-timeout>
-	</session-config>
-	
+
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>

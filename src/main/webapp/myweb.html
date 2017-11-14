@@ -9,9 +9,13 @@
 		$.ajax({
 			type:'post',
 			url:'userpost/'+$("input[name='username']").val(),
-			data:$('#userpost').serialize()
+			data:$('#userpost').serialize(),
+			success:function(result,status,xhr){
+				alert(result);
+			}
 		});
 	}
+	
 	
 </script>
 </head>

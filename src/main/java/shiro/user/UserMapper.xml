@@ -70,20 +70,8 @@
 			</if>
 		</trim>
 		<trim prefix="WHERE" prefixOverrides="AND |OR">
-			<if test="userid != null and userid!=''">
- 				AND userId=#{userid}
-			</if>
 			<if test="username != null and username!=''">
  				AND userName=#{username}
-			</if>
-			<if test="password != null and password!=''">
- 				AND password=#{password}
-			</if>
-			<if test="createtime != null and createtime!=''">
- 				AND createTime=#{createtime}
-			</if>
-			<if test="updatetime != null and updatetime!=''">
- 				AND updateTime=#{updatetime}
 			</if>
 		</trim>
 	</update>

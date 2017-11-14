@@ -26,7 +26,7 @@ public class UserController{
 	*查询：用户表（ssmuser）信息
 	*@throws Exception
 	**/
-	//@RequiresPermissions(value = { "/userGet" })
+	@RequiresPermissions(value = { "/userGet" })
 	@RequestMapping("/userGet")
 	public void userGet(UserBean userBean,ModelMap model,HttpServletRequest request) throws Exception{ 
 		userBean=new UserBean();
@@ -38,7 +38,7 @@ public class UserController{
 	*新增：用户表（ssmuser）信息
 	*@throws Exception
 	**/
-	//@RequiresPermissions(value={"/userPut"})
+	@RequiresPermissions(value={"/userPut"})
 	@RequestMapping("/userPut")
 	public void userPut(UserBean userBean,ModelMap model,HttpServletResponse response, HttpServletRequest request) throws Exception{
 		System.out.println("权限测试！/userPut");
@@ -61,7 +61,7 @@ public class UserController{
 	*删除：用户表（ssmuser）信息
 	*@throws Exception
 	**/
-	//@RequiresPermissions(value = {"/userDelete"})
+	@RequiresPermissions(value = {"/userDelete"})
 	@RequestMapping("/userDelete")
 	public void userDelete(UserBean userBean,ModelMap model,HttpServletResponse response, HttpServletRequest request) throws Exception{
 		System.out.println("权限测试！/userDelete");

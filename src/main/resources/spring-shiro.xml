@@ -66,20 +66,12 @@
     <!-- 自定义会话管理配置 -->  
 	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
         <property name="sessionDAO" ref="sessionDAO"/>
-        <!-- 会话超时时间，单位：毫秒  -->  
-    	<property name="globalSessionTimeout" value="${session.sessionTimeout}"/>
-    	<!-- 定时清理失效会话, 清理用户直接关闭浏览器造成的孤立会话   -->  
-    	<property name="deleteInvalidSessions" value="true"/> 
-    	<property name="sessionValidationInterval" value="${session.sessionTimeoutClean}"/>
-    	<property name="sessionValidationSchedulerEnabled" value="true"/>   
-    	<property name="sessionIdCookie" ref="sessionIdCookie"/>  
-    	<property name="sessionIdCookieEnabled" value="true"/>
     </bean>
     
     <!-- 自定义Session存储容器 -->  
 	<bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
         <property name="activeSessionsCacheName" value="shiro-activeSessionCache"/>
         <!-- 用SessionDAO将session保存到ehcache缓存 ,应用于shiro使用ehcache实现集群同步和session复制-->
-        <!-- <property name="cacheManager" ref="cacheManager" />  -->
+        <property name="cacheManager" ref="cacheManager" />
     </bean>
 </beans>
