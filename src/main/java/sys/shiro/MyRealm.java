@@ -1,6 +1,7 @@
 package sys.shiro;
 
 import org.apache.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -11,14 +12,14 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import shiro.user.UserBean;
 import shiro.user.UserService;
-import shiro.user.impl.UserServiceImpl;
 
-
+/**
+ * shiro中提供了对认证和授权的缓存，shiro是默认开始授权缓存而关闭认证缓存的
+ * */
 public class MyRealm extends AuthorizingRealm{
 	@Autowired
 	UserService userServiceImpl;
@@ -78,6 +79,18 @@ public class MyRealm extends AuthorizingRealm{
                 getName()  //realm name
         );
         return authenticationInfo;
+	}
+	/**
+	 * 缓存清空
+	 * 如果用户正常退出 缓存清空
+	 * 如果用户非正常退出比如关闭浏览器 缓存清空
+	 * 如果session到期，缓存清空，设置一般在缓存的配置文件中
+	 * 如果修改了用户的权限，而用户不退出系统，修改的权限不会生效，需要手动调用realm的clearCache方法清除
+	 * 修改权限，没有重新登录，需要清理缓存。
+	 * */
+	public void clearCached() {  
+	    PrincipalCollection principals = SecurityUtils.getSubject().getPrincipals();  
+	    super.clearCache(principals);  
 	}
 
 }
