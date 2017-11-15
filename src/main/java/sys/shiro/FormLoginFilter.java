@@ -17,19 +17,31 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 /**
- * 登录过滤器
+ * 登录请求处理
  * */
 public class FormLoginFilter extends PathMatchingFilter {
 
     private String loginUrl = "/login";
-    private String successUrl = "/";
     private Logger log = Logger.getLogger(MyRealm.class);
     @Autowired
 	UserService userServiceImpl;
     
+    /**
+     * 登录filter
+     * */
     @Override
     protected boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
     	HttpServletRequest req = (HttpServletRequest) request;
+    	String username = req.getParameter("username");
+    	String currentUserid=(String) SecurityUtils.getSubject().getPrincipal();
+    	UserBean user = userServiceImpl.findById(currentUserid);
+    	/**判断是否已经登录*/
+    	if (SecurityUtils.getSubject().isAuthenticated()&&user.getUsername()==username) {
+    		log.info("用户已经登录！");
+            return true;//已经登录过
+        }
+    	
+    	log.info("login!");
         /**查看url是不是登录的url*/
         if (isLoginRequest(req)) {
             if ("post".equalsIgnoreCase(req.getMethod())) {//form表单提交
@@ -38,20 +50,10 @@ public class FormLoginFilter extends PathMatchingFilter {
                     return true;
                 }
             }
-        }
-        return true;
+        }  
+        return false;   
     }
-
-//    private boolean redirectToSuccessUrl(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-//        WebUtils.redirectToSavedRequest(req, resp, successUrl);
-//        return false;
-//    }
-//
-//    private void saveRequestAndRedirectToLogin(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-//    	System.out.println("saveRequestAndRedirectToLogin");
-//        WebUtils.saveRequest(req);
-//        WebUtils.issueRedirect(req, resp, loginUrl);
-//    }
+    	
     /**
      * 登录
      * @param HttpServletRequest req
@@ -62,14 +64,6 @@ public class FormLoginFilter extends PathMatchingFilter {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
         log.info("用户:"+username+"，密码："+password);
-        String currentUserid=(String) SecurityUtils.getSubject().getPrincipal();
-    	UserBean user = userServiceImpl.findById(currentUserid);
-    	/**判断是否已经登录*/
-    	if (SecurityUtils.getSubject().isAuthenticated()&&user.getUsername()==username) {
-    		log.info("用户已经登录！");
-            return true;//已经登录过
-        }
-        
         try {
             SecurityUtils.getSubject().login(new UsernamePasswordToken(username, password));
         } catch (Exception e) {

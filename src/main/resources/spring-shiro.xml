@@ -6,27 +6,37 @@
     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     
     <!-- 基于Form表单的身份验证过滤器 -->
-    <bean id="formAuthenticationFilter" class="sys.shiro.FormLoginFilter">
+    <bean id="loginAuthenticationFilter" class="sys.shiro.FormLoginFilter">
+    </bean>
+    <bean id="authenticationFilter" class="sys.shiro.AuthenticationFilter">
     </bean>
     
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
+        <!-- 被allAuthC拦截的请求，会返回loginUrl -->
         <property name="loginUrl" value="/index.html"/>
     	<property name="successUrl" value="/myweb.html"/>
-    	<!-- 认证过滤器 （登录认证，和身份认证）-->
+    	<!-- 授权失败的页面 需要自己捕捉异常来跳转-->
+    	<property name="unauthorizedUrl" value="/unauthorized.html" />
+    	<!-- shiro的filter列表 -->
         <property name="filters">
-        
-        	<!-- 将自定义 的FormAuthenticationFilter注入shiroFilter中 -->
-            <util:map><entry key="authc" value-ref="formAuthenticationFilter"/></util:map>
+            <util:map>
+            	<!-- 登录控制 -->
+            	<entry key="loginAuthC" value-ref="loginAuthenticationFilter"/>
+            	<!-- 拦截所有未登录的非登录请求 -->
+            	<entry key="allAuthC" value-ref="authenticationFilter"></entry>
+            </util:map>
         </property>
-        <!-- 授权过滤器（所有的请求都需要授权） -->
         <property name="filterChainDefinitions">
             <value>
             	<!-- 对静态资源设置匿名访问 -->  
                 /images/** = anon  
                 /js/** = anon
-                <!-- /** = authc 所有url都必须认证通过才可以访问 -->  
-                /** = authc  
+                /=anon
+                /index.html=anon
+                <!-- /** = authc 所有url都必须认证通过才可以访问 --> 
+                /login=loginAuthC
+                /** = allAuthC  
             </value>
         </property>
 	</bean>

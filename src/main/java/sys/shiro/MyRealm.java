@@ -24,9 +24,6 @@ public class MyRealm extends AuthorizingRealm{
 	@Autowired
 	UserService userServiceImpl;
 	private Logger log = Logger.getLogger(MyRealm.class);
-	
-	
-	
 	/**
 	 * 授权
 	 * @param PrincipalCollection principals
