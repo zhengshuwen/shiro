@@ -50,6 +50,7 @@ public class RequestNumberFilter implements Filter{
 		HttpServletResponse response = (HttpServletResponse)servletResponse;
 		HttpServletRequest request = (HttpServletRequest)servletRequest;
 		/**有请求进入，当天请求数增加一个，当前并发量增加一个*/
+		log.info(request);
 		dayCountIncrease();
 		int num = nowCountIncrease();
 		/**查看请求并发量是否达到最大限制值*/

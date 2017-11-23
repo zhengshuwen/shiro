@@ -13,7 +13,7 @@ import org.apache.shiro.web.filter.AccessControlFilter;
 public class AuthenticationFilter extends AccessControlFilter{
 	private Logger log=Logger.getLogger(AuthenticationFilter.class);
 	@Override
-	protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue)
+	protected boolean isAccessAllowed(ServletRequest req, ServletResponse resp, Object mappedValue)
 			throws Exception {
 		return SecurityUtils.getSubject().isAuthenticated();
 	}

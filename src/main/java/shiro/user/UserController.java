@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import shiro.user.impl.UserServiceImpl;
 
@@ -50,9 +51,10 @@ public class UserController{
 	*更新：用户表（ssmuser）信息
 	*@throws Exception
 	**/
+	//@ResponseBody
 	@RequiresPermissions(value = {"/userPost"})
 	@RequestMapping(value="/userpost/{username}",method=RequestMethod.POST)
-	public String userPost(@PathVariable("username")String username,UserBean user,ModelMap model,HttpServletResponse response, HttpServletRequest request) throws Exception{
+	public String userPost(UserBean user,ModelMap model,HttpServletResponse response, HttpServletRequest request) throws Exception{
 		System.out.println("权限测试！/userPost");
 		userServiceImpl.update(user);
 		return "success.html";
