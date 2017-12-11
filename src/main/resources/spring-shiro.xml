@@ -14,8 +14,8 @@
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
         <!-- 被allAuthC拦截的请求，会返回loginUrl -->
-        <property name="loginUrl" value="/index.html"/>
-    	<property name="successUrl" value="/myweb.html"/>
+        <property name="loginUrl" value="/login.html"/>
+    	<property name="successUrl" value="/main.html"/>
     	<!-- 授权失败的页面 需要自己捕捉异常来跳转-->
     	<property name="unauthorizedUrl" value="/unauthorized.html" />
     	<!-- shiro的filter列表 -->
@@ -30,12 +30,15 @@
         <property name="filterChainDefinitions">
             <value>
             	<!-- 对静态资源设置匿名访问 -->  
-                /images/** = anon  
+                /img/** = anon  
                 /js/** = anon
+                /layui_v2.2.3/** = anon
+                /css/** = anon
                 /=anon
-                /index.html=anon
+                /captcha.do=anon
+                /login.html=anon
                 <!-- /** = authc 所有url都必须认证通过才可以访问 --> 
-                /login=loginAuthC
+                /loginCheck.do=loginAuthC
                 /** = allAuthC  
             </value>
         </property>

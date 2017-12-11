@@ -15,6 +15,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 /**
@@ -22,7 +24,7 @@ import java.io.UnsupportedEncodingException;
  * */
 public class FormLoginFilter extends AccessControlFilter {
 
-    private String loginUrl = "/login";
+    private String loginUrl = "/loginCheck.do";
     private Logger log = Logger.getLogger(MyRealm.class);
     @Autowired
 	UserService userServiceImpl;
@@ -36,7 +38,6 @@ public class FormLoginFilter extends AccessControlFilter {
     	req.setCharacterEncoding("utf-8");
         String username = req.getParameter("username");
         String password = req.getParameter("password");
-        log.info("用户:"+username+"，密码："+password);
         try {
             SecurityUtils.getSubject().login(new UsernamePasswordToken(username, password));
         } catch (Exception e) {
@@ -45,6 +46,16 @@ public class FormLoginFilter extends AccessControlFilter {
             return false;
         }
         return true;
+    }
+    
+    private boolean captcha(String captcha,HttpSession session){
+    	String sCaptcha=(String)session.getAttribute("captcha");
+    	boolean ischeck=false;
+    	if(captcha!=null&&captcha.equals(sCaptcha)){
+    		ischeck=true;
+    	}
+    	log.info("验证码是否正确？"+ischeck);
+		return ischeck;
     }
 
     private boolean isLoginRequest(HttpServletRequest req) {
@@ -57,6 +68,12 @@ public class FormLoginFilter extends AccessControlFilter {
 			throws Exception {
 		HttpServletRequest req = (HttpServletRequest) request;
     	String username = req.getParameter("username");
+    	String captcha=req.getParameter("captcha");
+    	HttpSession session=req.getSession();
+    	/**查看验证码是否正确*/
+        if(!captcha(captcha,session))
+        	return false;
+        
     	String currentUserid=(String) SecurityUtils.getSubject().getPrincipal();
     	UserBean user = userServiceImpl.findById(currentUserid);
     	/**判断是否已经登录*/

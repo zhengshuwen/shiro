@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+<meta charset="UTF-8">
+<title>Autumn Framework</title>
+<link rel="shortcut icon" href="ico/favicon.ico" type="image/x-icon" />
+
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/json2.js"></script>
+<script src="js/bootstrap.min.js"></script>
+
+<!-- Css files -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<link href="css/style.min.css" rel="stylesheet">
+<style type="text/css">
+	 .sidebar{
+		overflow-y :auto;
+	} 
+</style>
+<script type="text/javascript">  
+    jQuery.fn.slideLeftHide = function( speed, callback ) {  
+        this.animate({  
+            width : "hide",  
+            paddingLeft : "hide",  
+            paddingRight : "hide",  
+            marginLeft : "hide",  
+            marginRight : "hide"  
+        }, speed, callback );  
+    };  
+    jQuery.fn.slideLeftShow = function( speed, callback ) {  
+        this.animate({  
+            width : "show",  
+            paddingLeft : "show",  
+            paddingRight : "show",  
+            marginLeft : "show",  
+            marginRight : "show"  
+        }, speed, callback );  
+    };
+</script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		//同步的ajax
+		
+		$.ajaxSetup({
+			async : false,
+			headers: {
+				Accept: "application/json; charset=utf-8"
+			}
+		});
+		//获取menu的信息
+		var json = [];
+		$.get("getMenu.do", function(data) {
+			//json = JSON.parse(data);
+			json=data;
+		},"json");
+
+		initMenu(json);
+	});
+	
+	function createMenu(menuJson){
+		//menuJson:menuId:0101,menuName:测试,fatherMenuId:01,menuUrl:test.do
+		var length=menuJson.length;
+		for(x in menuJson){
+			var html=createHtml(menuJson[x]);
+			$("#menu").append(html);
+		}
+	}
+	
+	function createHtml(menu){
+		if(menu.menuId==undefined)
+			return "";
+		console.info(menu.menuId);
+		//<li><a href="calendar.html"><i class="fa fa-calendar"></i><span class="text"> Calendar</span></a></li>
+		var str="";
+		if(isArray(menu.sonMenu)){
+			str="<li><a href="+menu.menuUrl+"><i class='fa fa-calendar'></i><span class='text'>"+menu.menuName+"</span><span class='fa fa-angle-down pull-right'></span></a><ul class='nav sub'>";
+			for(x in menu.sonMenu){	
+				str=str+createHtml(menu.sonMenu[x]);
+			}
+			str=str+"</ul></li>";
+		}else if(menu!=null&&menu.sonMenu.menuId==undefined){
+			str="<li><a href="+menu.menuUrl+"><i class='fa fa-calendar'></i><span class='text'>"+menu.menuName+"</span></a></li>";
+		}else{
+			str="<li><a href="+menu.menuUrl+"><i class='fa fa-calendar'></i><span class='text'>"+menu.menuName+"</span><span class='fa fa-angle-down pull-right'></span></a><ul class='nav sub'>";
+			str=str+createHtml(menu.sonMenu);
+			str=str+"</ul></li>";
+		}
+		return str
+	}
+	
+	function isArray(o){
+		var gettype=Object.prototype.toString
+		return gettype.call(o)=="[object Array]";
+	}
+	
+	function initMenu(json) {
+		createMenu(json);
+		$('#menu li a').click(function(){
+			var checkElement = $(this).next();
+		    if ((checkElement.is('ul')) && (!checkElement.is(':visible'))) {
+		    	checkElement.slideDown('visible');
+		    	return false;
+		    }
+		    if ((checkElement.is('ul')) && (checkElement.is(':visible'))) {
+		    	checkElement.slideUp();
+		    	return false;
+		    }
+		});
+		
+		$('#main-menu-toggle').click(function(){
+			var menuElement=$(".sidebar");
+			if(!menuElement.is(':visible')){
+				menuElement.slideLeftShow(400);
+				return false; 
+			}
+			if(menuElement.is(':visible')){
+				//menuElement.hide('slide', {direction: 'left'}, 1000);
+				menuElement.slideLeftHide(400);
+		    	return false;
+			}
+		});
+	}
+	
+	
+</script>
+</head>
+<body>
+	<!-- start: Header -->
+	<div class="navbar" role="navigation">
+	
+		<div class="container-fluid">		
+			
+			<ul class="nav navbar-nav navbar-actions navbar-left">
+				<!-- 关闭菜单 -->
+				<li class="visible-md visible-lg"><a href="" id="main-menu-toggle"><i class="fa fa-th-large"></i></a></li>		
+			</ul>
+	        <ul class="nav navbar-nav navbar-right">
+				<li class="dropdown visible-md visible-lg">
+	        		<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope-o"></i><span class="badge">5</span></a>
+	        		<ul class="dropdown-menu">
+						<li class="dropdown-menu-header">
+							<strong>Messages</strong>
+							<div class="progress thin">
+							  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%">
+							    <span class="sr-only">30% Complete (success)</span>
+							  </div>
+							</div>
+						</li>
+						<li class="avatar">
+							<a href="page-inbox.html">
+								<img class="avatar" src="assets/img/avatar1.jpg">
+								<div>New message</div>
+								<small>1 minute ago</small>
+								<span class="label label-info">NEW</span>
+							</a>
+						</li>
+										
+						<li class="dropdown-menu-footer text-center">
+							<a href="page-inbox.html">View all messages</a>
+						</li>	
+	        		</ul>
+	      		</li>
+				<li class="dropdown visible-md visible-lg">
+	        		<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell-o"></i><span class="badge">3</span></a>
+	        		<ul class="dropdown-menu">
+						<li class="dropdown-menu-header">
+							<strong>Notifications</strong>
+							<div class="progress thin">
+							  <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%">
+							    <span class="sr-only">30% Complete (success)</span>
+							  </div>
+							</div>
+						</li>							
+                        <li class="clearfix">
+							<i class="fa fa-comment"></i> 
+                            <a href="page-activity.html" class="notification-user"> Sharon Rose </a> 
+                            <span class="notification-action"> replied to your </span> 
+                            <a href="page-activity.html" class="notification-link"> comment</a>
+                        </li>                      
+						<li class="dropdown-menu-footer text-center">
+							<a href="page-activity.html">View all notification</a>
+						</li>
+	        		</ul>
+	      		</li>
+				<li class="dropdown visible-md visible-lg">
+					 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-gears"></i></a>					
+					<ul class="dropdown-menu update-menu" role="menu">
+						<li><a href="#"><i class="fa fa-database"></i> Database </a>
+                        </li>		
+					</ul>
+				</li>
+
+				<li><a href="logout.do"><i class="fa fa-power-off"></i></a></li>
+			</ul>
+			
+		</div>
+		
+	</div>
+	<!-- end: Header -->
+	
+	
+	<!-- start: menu -->
+	<div class="sidebar">
+		<div class="sidebar-header">
+			<span>SSM+S</span>
+		</div>
+		<div class="sidebar-menu" >
+			<ul class="nav nav-sidebar" id="menu">
+			</ul>
+		</div>
+	</div>
+	<!-- end: menu -->
+	
+	<!-- start: footer -->
+	<div class="modal fade" id="myModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Warning Title</h4>
+				</div>
+				<div class="modal-body">
+					<p>Here settings can be configured...</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end:footer -->
+</body>
+</html>

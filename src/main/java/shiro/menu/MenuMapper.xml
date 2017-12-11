@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--interface mapper-->
+<mapper namespace="shiro.menu.MenuMapper">
+<!--map is a id / model is a entity(has geter/seter)-->
+	<resultMap id="map" type="shiro.menu.MenuBean">
+		<result column="menuId" property="menuid" />
+		<result column="menuName" property="menuname" />
+		<result column="fatherMenuId" property="fathermenuid" />
+		<result column="menuUrl" property="menuurl" />
+	</resultMap>
+
+	<sql id="Base_Column_List" >
+		menuId,menuName,fatherMenuId,menuUrl
+	</sql>
+
+	<select id="selectTopMenu" resultMap="map">
+		select  <include refid="Base_Column_List" /> from menu where fatherMenuId is null
+	</select>
+	
+	<select id="selectByFatherMenuId" resultMap="map" parameterType="String" >
+		select <include refid="Base_Column_List" /> from menu where fatherMenuId=#{fatherMenuId}
+	</select>
+	
+	<select id="select"  parameterType="shiro.menu.MenuBean" resultMap="map">
+		select
+		  <include refid="Base_Column_List" />
+		from menu
+		<trim prefix="WHERE" prefixOverrides="AND |OR">
+			<if test="menuid != null and menuid!=''">
+ 				AND menuId=#{menuid}
+			</if>
+			<if test="menuname != null and menuname!=''">
+ 				AND menuName=#{menuname}
+			</if>
+			<if test="fathermenuid != null and fathermenuid!=''">
+ 				AND fatherMenuId=#{fathermenuid}
+			</if>
+			<if test="menuurl != null and menuurl!=''">
+ 				AND menuUrl=#{menuurl}
+			</if>
+		</trim>
+	</select>
+	<update id="update" parameterType="shiro.menu.MenuBean">
+		update menu 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="menuid!= null and menuid!=''">
+ 				 menuId=#{menuid}, 
+			</if>
+			<if test="menuname!= null and menuname!=''">
+ 				 menuName=#{menuname}, 
+			</if>
+			<if test="fathermenuid!= null and fathermenuid!=''">
+ 				 fatherMenuId=#{fathermenuid}, 
+			</if>
+			<if test="menuurl!= null and menuurl!=''">
+ 				 menuUrl=#{menuurl}, 
+			</if>
+		</trim>
+		<trim prefix="WHERE" prefixOverrides="AND |OR">
+			<if test="menuid != null and menuid!=''">
+ 				AND menuId=#{menuid}
+			</if>
+			<if test="menuname != null and menuname!=''">
+ 				AND menuName=#{menuname}
+			</if>
+			<if test="fathermenuid != null and fathermenuid!=''">
+ 				AND fatherMenuId=#{fathermenuid}
+			</if>
+			<if test="menuurl != null and menuurl!=''">
+ 				AND menuUrl=#{menuurl}
+			</if>
+		</trim>
+	</update>
+	<insert id="insert" parameterType="shiro.menu.MenuBean">
+		insert into menu
+		<trim prefix="(" suffix=")" prefixOverrides="AND |OR" suffixOverrides=",">
+			<if test="menuid != null and menuid!=''">
+				menuId,
+			</if>
+			<if test="menuname != null and menuname!=''">
+				menuName,
+			</if>
+			<if test="fathermenuid != null and fathermenuid!=''">
+				fatherMenuId,
+			</if>
+			<if test="menuurl != null and menuurl!=''">
+				menuUrl,
+			</if>
+		</trim>
+		values
+		<trim prefix="(" suffix=")" prefixOverrides="AND |OR" suffixOverrides=",">
+			<if test="menuid != null and menuid!=''">
+				#{menuid},
+			</if>
+			<if test="menuname != null and menuname!=''">
+				#{menuname},
+			</if>
+			<if test="fathermenuid != null and fathermenuid!=''">
+				#{fathermenuid},
+			</if>
+			<if test="menuurl != null and menuurl!=''">
+				#{menuurl},
+			</if>
+		</trim>
+	</insert>
+	<delete  id="delete" parameterType="shiro.menu.MenuBean">
+		delete from menu
+		<trim prefix="WHERE" prefixOverrides="AND |OR">
+			<if test="menuid != null and menuid!=''">
+ 				AND menuId=#{menuid}
+			</if>
+			<if test="menuname != null and menuname!=''">
+ 				AND menuName=#{menuname}
+			</if>
+			<if test="fathermenuid != null and fathermenuid!=''">
+ 				AND fatherMenuId=#{fathermenuid}
+			</if>
+			<if test="menuurl != null and menuurl!=''">
+ 				AND menuUrl=#{menuurl}
+			</if>
+		</trim>
+	</delete>
+
+</mapper>
